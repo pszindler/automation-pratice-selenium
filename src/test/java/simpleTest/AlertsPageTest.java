@@ -10,7 +10,7 @@ import pageObjects.AlertsPage;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
-public class simpleTesty extends BaseTest {
+public class AlertsPageTest extends BaseTest {
     AlertsPage alertsPage = new AlertsPage();
 
     @ParameterizedTest
@@ -24,13 +24,13 @@ public class simpleTesty extends BaseTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"OK button pressed"})
-    @DisplayName("Check simple alert pop up")
+    @ValueSource(strings = {"Lord Vader"})
+    @DisplayName("Check prompt alert box")
     @Tag("alert")
     @Tag("basic")
-    void checkConfirmAlertBox(String label) {
-        String result = alertsPage.clickAndAcceptTheSimpleAlert();
-        assertThat(result).isEqualTo(label);
+    void checkConfirmAlertBox(String text) {
+        String result = alertsPage.clickAndAcceptTheConfirmAlert(text);
+        assertThat(result).isEqualTo("Hello %s! How are you today?".formatted(text));
     }
 
 }

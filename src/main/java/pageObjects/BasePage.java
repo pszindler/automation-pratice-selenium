@@ -1,12 +1,25 @@
 package pageObjects;
 
 import driver.DriverFactory;
-import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class BasePO{
+import java.time.Duration;
 
-    public BasePO() {
+public class BasePage {
+
+    private static final Duration TIMEOUT = Duration.ofSeconds(5);
+    private static final Duration POLLING = Duration.ofSeconds(100);
+
+    protected WebDriver driver;
+    private WebDriverWait wait;
+
+    public BasePage() {
+        getManager();
+        this.driver = getDriver();
+        wait = new WebDriverWait(this.driver, TIMEOUT, POLLING);
     }
 
     public WebDriver getDriver() {
@@ -18,7 +31,31 @@ public class BasePO{
     }
 
     public void navigateToURL(String url) {
-        getManager();
-        getDriver().get(url);
+        driver.get(url);
     }
+
+    public WebElement findElement(String selector) {
+        return driver.findElement(By.cssSelector(selector));
+    }
+
+    public void clickElement(String selector) {
+        findElement(selector).click();
+    }
+
+    public void dismissAlert() {
+        driver.switchTo().alert().dismiss();
+    }
+
+    public String getText(String selector) {
+         return findElement(selector).getText();
+    }
+
+    public void sendKeysToAlert(String text) {
+        driver.switchTo().alert().sendKeys(text);
+    }
+
+    public void acceptAlert() {
+        driver.switchTo().alert().accept();
+    }
+
 }
