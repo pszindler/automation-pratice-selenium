@@ -1,4 +1,4 @@
-package simpleTest;
+package alertModule;
 
 import base.BaseTest;
 import org.junit.jupiter.api.DisplayName;
@@ -28,9 +28,33 @@ public class AlertsPageTest extends BaseTest {
     @DisplayName("Check prompt alert box")
     @Tag("alert")
     @Tag("basic")
-    void checkConfirmAlertBox(String text) {
+    void checkPromptAlertBox(String text) {
         String result = alertsPage.clickAndAcceptTheConfirmAlert(text);
         assertThat(result).isEqualTo("Hello %s! How are you today?".formatted(text));
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    @DisplayName("Check confirm alert box")
+    @Tag("alert")
+    @Tag("basic")
+    void checkConfirmAlertBox(Boolean isAccept) {
+        String result = alertsPage.clickConfirmAlertBox(isAccept);
+        if (isAccept) {
+            assertThat(result).isEqualTo("You pressed OK!");
+        } else {
+            assertThat(result).isEqualTo("You pressed Cancel!");
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"OK button pressed"})
+    @DisplayName("Check delayed alert")
+    @Tag("alert")
+    @Tag("basic")
+    void checkDelayedAlert(String label) {
+        String result = alertsPage.clickDelayedAlert();
+        assertThat(result).isEqualTo(label);
     }
 
 }

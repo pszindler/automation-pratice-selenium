@@ -18,6 +18,7 @@
         <jupiter.boni.garcia.version>4.3.1</jupiter.boni.garcia.version>
         <jupiter.version>5.9.0</jupiter.version>
         <assertj.core.version>3.22.0</assertj.core.version>
+        <faker.version>1.0.2</faker.version>
     </properties>
 
     <dependencies>
@@ -86,6 +87,13 @@
             <artifactId>logback-core</artifactId>
             <version>${logback.version}</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.javafaker/javafaker -->
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>${faker.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
