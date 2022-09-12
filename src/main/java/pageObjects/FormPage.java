@@ -1,57 +1,125 @@
 package pageObjects;
 
-import com.github.javafaker.Faker;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.Select;
 
+import java.io.File;
+import java.text.Normalizer;
+import java.util.List;
 import java.util.Random;
 
 public class FormPage extends BasePage {
 
-    Random random = new Random();
+    @FindBy(css = "input#inputFirstName3")
+    private WebElement inputFirstNameCSS;
+    @FindBy(css = "input#inputLastName3")
+    private WebElement inputLastNameCSS;
+    @FindBy(css = "input#inputEmail3")
+    private WebElement inputEmailCSS;
+    @FindBy(name = "gridRadiosSex")
+    private List<WebElement> sexOptions;
+    @FindBy(css = "input#inputAge3")
+    private WebElement inputAgeCSS;
+    @FindBy(name = "gridRadiosExperience")
+    private List<WebElement> experienceOptions;
+    @FindBy(css = "input#gridCheckAutomationTester")
+    private WebElement automationTesterCheckboxCSS;
+    @FindBy(css = "#selectContinents")
+    private WebElement selectContinentsCSS;
+    @FindBy(css = "[value='switch-commands']")
+    private WebElement seleniumCommandsSwitchCommandsCSS;
+    @FindBy(css = "[value='wait-commands']")
+    private WebElement seleniumWaitCommandsCSS;
+    @FindBy(css = "#chooseFile")
+    private WebElement buttonChooseFileCSS;
+    @FindBy(css = ".btn-primary")
+    private WebElement buttonSignInCSS;
+    @FindBy(css = "div#validator-message")
+    private WebElement validatorMessageCSS;
+    @FindBy(id = "selectSeleniumCommands")
+    private WebElement seleniumCommands;
 
-    private final String inputFirstNameCSS = "input#inputFirstName3";
-    private final String inputLastNameNameCSS = "input#inputLastName3";
-    private final String inputEmailCSS = "input#inputEmail3";
-    private String gridRadioSexListCSS = ".form-check:nth-child(*) [name='gridRadiosSex']";
-    private final String inputAgeCSS = "input#inputAge3";
-    private String gridRadioExperienceListCSS = ".form-check:nth-child(*) [name='gridRadiosExperience']";
-    private final String automationTesterCheckboxCSS = "input#gridCheckAutomationTester";
-    private final String selectContinentsCSS = "#selectContinents";
-    private String continentsListCSS = "#selectContinents option:nth-child(*)";
-    private final String seleniumCommandsSwitchCommandsCSS = "[value='switch-commands']";
-    private final String seleniumWaitCommandsCSS = "[value='wait-commands']";
-    private final String buttonChooseFileCSS = "#chooseFile";
-    private final String buttonTestFileToDownloadCSS = "[role='button']";
-    private final String buttonSignInCSS = ".btn-primary";
-    private final String filePath = "C:\\Development\\SzkolenieTesterskie\\SeleniumModernTester\\automation-pratice\\src\\main\\filesForUpload\\test-file-to-upload.xlsx";
-    private final String validatorMessageCSS = "div#validator-message";
-    private final String formURL = "https://seleniumui.moderntester.pl/form.php";
+
     private int getRandomValue(int from, int to) {
         return new Random().ints(from, to)
                 .findFirst()
                 .getAsInt();
     }
 
-    private String randomSelector(String selector, int numberOfElement) {
+    private String randomSelector(WebElement selector, int numberOfElement) {
         char newChar = String.valueOf(numberOfElement).charAt(0);
-        return selector.replace('*', newChar);
+        String rtn = String.valueOf(selector);
+        return rtn.replace('*', newChar);
     }
 
-    public String FillTheForm(Faker faker) {
-        navigateToURL(formURL);
-        sendKeys(findElement(inputFirstNameCSS), faker.name().firstName());
-        sendKeys(findElement(inputLastNameNameCSS), faker.name().lastName());
-        sendKeys(findElement(inputEmailCSS), faker.internet().emailAddress());
-        findElement(randomSelector(gridRadioSexListCSS, getRandomValue(1,3))).click();
-        sendKeys(findElement(inputAgeCSS), "1000");
-        findElement(randomSelector(gridRadioExperienceListCSS, getRandomValue(1,7))).click();
-        findElement(automationTesterCheckboxCSS).click();
-        findElement(selectContinentsCSS).click();
-        findElement(randomSelector(continentsListCSS, getRandomValue(2,7))).click();
-        selectMultipleElements(findElement(seleniumCommandsSwitchCommandsCSS), findElement(seleniumWaitCommandsCSS));
-        sendKeys(findElement(buttonChooseFileCSS), filePath);
-        findElement(buttonSignInCSS).click();
-        return getText(validatorMessageCSS);
+    public FormPage setFirstName(String firstName) {
+        sendKeys(inputFirstNameCSS, firstName);
+        return this;
+    }
+
+    public FormPage setLastName(String lastName) {
+        sendKeys(inputLastNameCSS, lastName);
+        return this;
+    }
+
+    public FormPage setEmail(String email) {
+        sendKeys(inputEmailCSS, email);
+        return this;
+    }
+
+    public FormPage randomSetSex(int number) {
+        sexOptions.get(number).click();
+        return this;
+    }
+
+    public FormPage setAge(String age) {
+        sendKeys(inputAgeCSS, age);
+        return this;
+    }
+
+    public FormPage randomSetYearsOfExperience(int number) {
+        experienceOptions.get(number).click();
+        return this;
+    }
+
+    public FormPage setAutomationTesterBox() {
+        automationTesterCheckboxCSS.click();
+        return this;
+    }
+
+    public FormPage pickUpRandomContinent(String optionvalue) {
+        new Select(selectContinentsCSS).selectByValue(optionvalue);
+        return this;
+    }
+
+    public FormPage pickUpSeleniumCommands() {
+        selectMultipleElements(seleniumCommandsSwitchCommandsCSS, seleniumCommandsSwitchCommandsCSS);
+        return this;
+    }
+
+    public FormPage uploadFile(File file) {
+        buttonChooseFileCSS.sendKeys(file.getAbsolutePath());
+        return this;
+    }
+
+    public FormPage signIn() {
+        buttonSignInCSS.click();
+        return this;
+    }
+
+    public String getValidationMessage() {
+        return validatorMessageCSS.getText();
+    }
+
+    public void navigateTo(String URL) {
+        navigateToURL(URL);
+    }
+
+    public FormPage selectCommands() {
+        new Select(seleniumCommands).selectByValue("switch-commands");
+        new Select(seleniumCommands).selectByValue("wait-commands");
+        return this;
     }
 
 }

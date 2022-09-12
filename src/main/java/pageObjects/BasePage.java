@@ -3,6 +3,7 @@ package pageObjects;
 import driver.DriverFactory;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -11,21 +12,23 @@ import java.time.Duration;
 public class BasePage {
 
     private static final Duration TIMEOUT = Duration.ofSeconds(5);
-
     protected WebDriver driver;
-    private WebDriverWait wait;
+    protected WebDriverWait wait;
+    protected Actions actions;
 
-    protected BasePage() {
+    BasePage() {
         getManager();
         this.driver = getDriver();
-        wait = new WebDriverWait(this.driver, TIMEOUT);
+        PageFactory.initElements(driver, this);
+        wait = new WebDriverWait(driver, TIMEOUT);
+        actions = new Actions(driver);
     }
 
-    protected WebDriver getDriver() {
+    private WebDriver getDriver() {
         return DriverFactory.getDriver();
     }
 
-    protected void getManager() {
+    private void getManager() {
         DriverFactory.createWebDriverManager();
     }
 
@@ -46,7 +49,7 @@ public class BasePage {
     }
 
     protected String getText(String selector) {
-         return findElement(selector).getText();
+        return findElement(selector).getText();
     }
 
     protected void sendKeysToAlert(String text) {
@@ -61,18 +64,26 @@ public class BasePage {
         wait.ignoring(NoAlertPresentException.class)
                 .until(ExpectedConditions.alertIsPresent());
     }
+
     protected void sendKeys(WebElement element, String path) {
         element.sendKeys(path);
     }
 
     protected void selectMultipleElements(WebElement firstWebElement, WebElement secondWebElement) {
-        Actions actions = new Actions(driver);
         actions.keyDown(Keys.LEFT_CONTROL)
                 .click(firstWebElement)
                 .click(secondWebElement)
                 .keyUp(Keys.LEFT_CONTROL)
                 .build()
                 .perform();
+    }
+
+    protected void switchToIFrame(WebElement webElement) {
+        driver.switchTo().frame(webElement);
+    }
+
+    protected void switchToDefaultContent() {
+        driver.switchTo().defaultContent();
     }
 
 }

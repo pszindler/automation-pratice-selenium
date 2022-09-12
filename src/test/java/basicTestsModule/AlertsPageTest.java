@@ -1,4 +1,4 @@
-package alertModule;
+package basicTestsModule;
 
 import base.BaseTest;
 import org.junit.jupiter.api.DisplayName;

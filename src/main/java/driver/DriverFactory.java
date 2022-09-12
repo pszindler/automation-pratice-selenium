@@ -51,6 +51,7 @@ public class DriverFactory {
             case "firefox" -> {
                 FirefoxOptions firefoxOptions = new FirefoxOptions();
                 driver = new FirefoxDriver(firefoxOptions);
+                driver.manage().window().maximize();
             }
         }
         return driver;
